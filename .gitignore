@@ -1,3 +1,9 @@
+build/Release
+codegentemp
+Generated_Source
+CortexM4
+CortexM0P
+
 # Prerequisites
 *.d
 
