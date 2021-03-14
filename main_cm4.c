@@ -19,11 +19,20 @@
 
 SemaphoreHandle_t bouton_semph = NULL;
 
+
+task_params_t task_A = {
+    .delay = 1000,
+    .message = "Tache A en cour \n\r"
+};
+
+task_params_t task_B = {
+    .delay = 999,
+    .message = "Tache B en cour \n\r"
+};
+
 void vLedTask(){
     for(;;){
-        Cy_GPIO_Write(LED_PORT,LED_NUM,1);
-        vTaskDelay(pdMS_TO_TICKS(500));
-        Cy_GPIO_Write(LED_PORT,LED_NUM,0);
+        Cy_GPIO_Write(LED_PORT,LED_NUM,!Cy_GPIO_Read(LED_PORT,LED_NUM));
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
@@ -53,6 +62,14 @@ void bouton_task(){
     }
 }
 
+void print_loop(void * params){
+    task_params_t parametre = *(task_params_t *)params;
+    for(;;){
+        vTaskDelay(pdMS_TO_TICKS(parametre.delay));
+        UART_1_PutString(parametre.message);
+    }
+    
+}
 
 int main(void)
 {
@@ -68,7 +85,10 @@ int main(void)
     
     xTaskCreate(vLedTask,"BLINK LED",80,NULL,3,NULL);
     xTaskCreate(bouton_task,"BOUTON",80,NULL,3,NULL);
-
+    
+    xTaskCreate(print_loop,"task A",configMINIMAL_STACK_SIZE, (void *) &task_A, 1,NULL);
+    xTaskCreate(print_loop,"task B", configMINIMAL_STACK_SIZE, (void *) &task_B,1,NULL);
+    
     vTaskStartScheduler();
     
     for(;;)
