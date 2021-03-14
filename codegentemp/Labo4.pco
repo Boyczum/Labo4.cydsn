@@ -1,5 +1,5 @@
 # Labo4
-# 2021-03-10 20:24:49Z
+# 2021-03-14 04:17:51Z
 
 dont_use_location p4usbcell -1 -1 0
 dont_use_location USB -1 -1 0
@@ -9,4 +9,11 @@ set_location "ClockBlock" Clock -1 -1 0
 set_location "CPUSS" CPUSS -1 -1 0
 set_io "CY_CPUSS_SWJ_SWCLK_TCLK(0)" iocell 6 7
 set_io "CY_CPUSS_SWJ_SWDIO_TMS(0)" iocell 6 6
-set_io "LED(0)" iocell 1 1
+set_io "LED(0)" iocell 11 1
+set_io "\UART_1:tx(0)\" iocell 5 1
+set_io "\UART_1:rx(0)\" iocell 5 0
+set_io "Bouton(0)" iocell 0 4
+set_location "\UART_1:SCB_IRQ\" interrupt -1 -1 46
+set_location "\UART_1:SCB\" SCB -1 -1 5
+set_location "Bouton_ISR" interrupt -1 -1 0
+set_location "IOSS" IOSS -1 -1 0
