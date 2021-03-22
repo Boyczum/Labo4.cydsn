@@ -19,8 +19,8 @@
 #include "params.h"
 #include "queue.h"
 
-QueueHandle_t print_queue;
-SemaphoreHandle_t bouton_semph = NULL;
+volatile QueueHandle_t      print_queue  = NULL;
+volatile SemaphoreHandle_t  bouton_semph = NULL;
 
 task_params_t task_A = {
     .delay = 1000,
@@ -63,8 +63,14 @@ void bouton_task(){
 
 void print_loop(void * params){
     task_params_t parametre = *(task_params_t *)params;
-    char* pointeur = &(parametre.message[0]);
     
+    /* Code avant le changement pour la partie bonus 3b
+    for(;;){
+        vTaskDelay(pdMS_TO_TICKS(parametre.delay));
+        UART_1_PutString(parametre.message);
+    }*/
+    
+    char* pointeur = &(parametre.message[0]);
     for(;;){
         vTaskDelay(pdMS_TO_TICKS(parametre.delay));
         xQueueSend(print_queue,&pointeur,portMAX_DELAY ); 
@@ -81,7 +87,7 @@ void print(){
 
 int main(void)
 {
-        /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+    /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     bouton_semph = xSemaphoreCreateBinary();
     print_queue = xQueueCreate(2,sizeof(char *));
     
